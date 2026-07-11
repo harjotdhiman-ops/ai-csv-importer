@@ -31,11 +31,11 @@ An AI-powered CSV import application that intelligently converts unstructured CS
 
 ### CSV Preview
 
-![Preview](docs/preview.png)
+![Preview](docs/upload-preview.png)
 
 ### AI Parsed CRM Records
 
-![CRM](docs/crm-table.png)
+![CRM](docs/ai-result.png)
 
 ### Dark Mode
 
