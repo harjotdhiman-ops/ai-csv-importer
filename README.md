@@ -251,4 +251,8 @@ GitHub: https://github.com/harjotdhiman-ops
 
 ---
 
+<<<<<<< HEAD
 ## ⭐ If you found this project useful, consider giving it a star!
+=======
+## ⭐ If you found this project useful, consider giving it a star!
+>>>>>>> 9113ccc (Add README and project screenshots)
