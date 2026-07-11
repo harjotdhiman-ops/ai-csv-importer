@@ -1,6 +1,27 @@
 const parseCSV = require("../utils/csvParser");
 const extractCRM = require("../services/aiService");
 
+// Helper function to retry extractCRM with retries
+async function retryExtractCRM(batch, maxRetries = 3) {
+  let lastError;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`   Attempt ${attempt}/${maxRetries}`);
+      return await extractCRM(batch);
+    } catch (err) {
+      lastError = err;
+      console.log(`   Attempt ${attempt} failed: ${err.message}`);
+
+      if (attempt < maxRetries) {
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+      }
+    }
+  }
+
+  throw lastError;
+}
+
 exports.importCSV = async (req, res) => {
   try {
     if (!req.file) {
@@ -18,11 +39,13 @@ const BATCH_SIZE = 20;
 let allRecords = [];
 
 for (let i = 0; i < records.length; i += BATCH_SIZE) {
+  const batchNumber = i / BATCH_SIZE + 1;
+  const totalBatches = Math.ceil(records.length / BATCH_SIZE);
   const batch = records.slice(i, i + BATCH_SIZE);
 
-  console.log(`Processing batch ${i / BATCH_SIZE + 1}`);
+  console.log(`\n📦 Processing batch ${batchNumber}/${totalBatches}`);
 
-  const parsed = await extractCRM(batch);
+  const parsed = await retryExtractCRM(batch);
 
   allRecords.push(...parsed);
 }
