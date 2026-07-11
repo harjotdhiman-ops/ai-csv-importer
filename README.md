@@ -220,13 +220,13 @@ Download CSV
 **Frontend**
 
 ```
-https://YOUR-VERCEL-URL.vercel.app
+https://ai-csv-importer-epgl.vercel.app/
 ```
 
 **Backend**
 
 ```
-https://YOUR-RENDER-URL.onrender.com
+https://ai-csv-importer-shih.onrender.com
 ```
 
 ---
