@@ -4,6 +4,9 @@ import React, { useRef, useState } from "react";
 import Papa from "papaparse";
 import axios from "axios";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+
 const UploadBox = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [csvData, setCsvData] = useState<any[]>([]);
@@ -99,16 +102,23 @@ const UploadBox = () => {
 
     setProgress(10);
     setStatus("Uploading CSV...");
+    setProgress(30);
+    setStatus("Sending file to server...");
     setError(null);
     setSuccess(null);
     try {
       const formData = new FormData();
       formData.append("file", selectedFile);
       const response = await axios.post(
-        "http://localhost:5001/api/import",
-        formData
+        `${API_URL}/api/import`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
-      setProgress(80);
+      setProgress(90);
       setStatus("Processing AI response...");
       console.log(response.data);
       setCrmData(response.data.records || []);

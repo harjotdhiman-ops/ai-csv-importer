@@ -1,7 +1,8 @@
-const { GoogleGenAI } = require("@google/genai");
+const OpenAI = require("openai");
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
+const client = new OpenAI({
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: "https://api.groq.com/openai/v1",
 });
 
 async function extractCRM(records) {
@@ -38,12 +39,22 @@ Rules:
 - No explanation.
 `;
 
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: `${prompt}\n\n${JSON.stringify(records)}`,
+  const response = await client.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
+    temperature: 0,
+    messages: [
+      {
+        role: "system",
+        content: prompt,
+      },
+      {
+        role: "user",
+        content: JSON.stringify(records),
+      },
+    ],
   });
 
-  const text = response.text.trim();
+  const text = response.choices[0].message.content.trim();
 
   // Remove markdown if Gemini returns it
   const cleaned = text
